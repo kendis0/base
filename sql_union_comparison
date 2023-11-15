@@ -1,0 +1,9 @@
+SELECT well_id
+FROM table1
+WHERE well_id NOT IN (SELECT well_id FROM table2)
+
+UNION
+
+SELECT well_id
+FROM table2
+WHERE well_id NOT IN (SELECT well_id FROM table1);
