@@ -1,0 +1,29 @@
+ALTER DATABASE DatabaseName SET AUTO_UPDATE_STATISTICS_ASYNC OFF;
+
+DECLARE @TableName NVARCHAR(255)
+DECLARE @IndexName NVARCHAR(255)
+DECLARE rebuild_spatial_indices CURSOR FOR
+    SELECT
+        t.name AS TableName,
+        ix.name AS IndexName
+    FROM
+        sys.tables t
+    INNER JOIN sys.indexes ix ON t.object_id = ix.object_id-
+    INNER JOIN sys.columns c ON t.object_id = c.object_id
+    WHERE
+        c.system_type_id IN (geometry::STGeometryType(), geography::STGeometryType())
+
+OPEN rebuild_spatial_indices
+FETCH NEXT FROM rebuild_spatial_indices INTO @TableName, @IndexName
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    EXEC('ALTER INDEX ' + @IndexName + ' ON ' + @TableName + ' REBUILD')
+
+    FETCH NEXT FROM rebuild_spatial_indices INTO @TableName, @IndexName
+END
+
+CLOSE rebuild_spatial_indices
+DEALLOCATE rebuild_spatial_indices;
+
+ALTER DATABASE DatabaseName SET AUTO_UPDATE_STATISTICS_ASYNC ON;
