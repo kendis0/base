@@ -1,0 +1,21 @@
+WITH JoinedTables AS (
+    SELECT
+        t1.*,
+        t2.*
+    FROM
+        Table1 t1
+    JOIN
+        Table2 t2 ON t1.common_ID = t2.common_ID
+
+    -- continue CTE'ing if necessary
+    -- especially helpful to nest intersects, etc
+    -- WHERE t1.something = t2.something
+)
+
+SELECT
+    jt.*,
+    t3.*
+FROM
+    JoinedTables jt
+JOIN
+    Table3 t3 ON jt.common_ID = t3.common_ID;
