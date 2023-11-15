@@ -1,0 +1,22 @@
+import arcpy
+import os
+
+def recreate_file_geodatabase(workspace):
+    if arcpy.Exists(workspace):
+        try:
+            arcpy.Delete_management(workspace)
+            print(f"Deleted existing file geodatabase: {workspace}")
+        except arcpy.ExecuteError:
+            print(arcpy.GetMessages(2))
+            return
+
+    try:
+        arcpy.CreateFileGDB_management(os.path.dirname(workspace), os.path.basename(workspace))
+        print(f"Created new file geodatabase: {workspace}")
+    except arcpy.ExecuteError:
+        print(arcpy.GetMessages(2))
+
+if __name__ == "__main__":
+    file_gdb_path = r"C:\Path"
+
+    recreate_file_geodatabase(file_gdb_path)
