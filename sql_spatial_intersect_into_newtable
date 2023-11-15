@@ -1,0 +1,8 @@
+CREATE TABLE IntersectedPolylines (
+    IntersectedPolyline GEOMETRY
+);
+
+INSERT INTO IntersectedPolylines (IntersectedPolyline)
+SELECT Polylines.Geometry.STIntersection(Polygons.Geometry) AS IntersectedPolyline
+FROM Polylines
+JOIN Polygons ON Polylines.Geometry.STIntersects(Polygons.Geometry) = 1;
