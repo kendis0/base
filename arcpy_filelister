@@ -1,0 +1,22 @@
+import arcpy
+import os
+
+def list_files_in_folder(folder_path):
+    try:
+        if not arcpy.Exists(folder_path):
+            print(f"The folder '{folder_path}' does not exist.")
+            return
+
+        file_list = arcpy.ListFiles("*", folder_path)
+
+        if file_list:
+            print(f"Files in the folder '{folder_path}':")
+            for file_name in file_list:
+                print(file_name)
+        else:
+            print(f"No files found in the folder '{folder_path}'.")
+
+    except arcpy.ExecuteError:
+        print(arcpy.GetMessages(2))
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
